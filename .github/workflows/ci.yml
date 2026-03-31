@@ -17,12 +17,12 @@ jobs:
   # BUILD (MULTI-OS MATRIX)
   # =========================
   build:
-    name: Build (${{ matrix.os }})
-    runs-on: ${{ matrix.os }}
+    name: Build
+    runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+#    strategy:
+#      matrix:
+#        os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
       # Get source code
