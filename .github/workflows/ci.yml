@@ -57,6 +57,12 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: kroemvandy/demo-app:latest
+
   # =========================
   # DEPENDENCY GRAPH (SAFE)
   # =========================
