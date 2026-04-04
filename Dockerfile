@@ -6,8 +6,11 @@ WORKDIR /app
 COPY build.gradle settings.gradle gradlew ./
 COPY gradle gradle
 
+# 🔥 FIX: make gradlew executable
+RUN chmod +x gradlew
 
-#RUN ./gradlew dependencies --no-daemon || true
+# (Optional but recommended for caching)
+RUN ./gradlew dependencies --no-daemon || true
 
 COPY src src
 
