@@ -1,14 +1,24 @@
-# Use a lightweight Java runtime
-FROM eclipse-temurin:17-jdk-jammy
+# -------- Build stage --------
+FROM gradle:8.5-jdk21 AS builder
 
-# Set working directory
 WORKDIR /app
 
-# Copy the built jar file
-COPY build/libs/*.jar demo-app.jar
+COPY build.gradle settings.gradle gradlew ./
+COPY gradle gradle
 
-# Expose port (default Spring Boot port)
+#RUN ./gradlew dependencies --no-daemon || true
+
+COPY src src
+
+RUN ./gradlew build -x test --no-daemon
+
+# -------- Runtime stage --------
+FROM eclipse-temurin:21-jdk-jammy
+
+WORKDIR /app
+
+COPY --from=builder /app/build/libs/*.jar app.jar
+
 EXPOSE 8080
 
-# Run the application
-ENTRYPOINT ["java", "-jar", "demo-app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
