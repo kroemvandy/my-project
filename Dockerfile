@@ -1,29 +1,14 @@
-# -------- Build stage --------
-FROM gradle:8.5-jdk17 AS builder
-
-WORKDIR /app
-
-# Copy Gradle files first (for caching dependencies)
-COPY build.gradle settings.gradle gradlew ./
-COPY gradle gradle
-
-# Download dependencies (cache layer)
-RUN ./gradlew dependencies --no-daemon || true
-
-# Copy source code
-COPY src src
-
-# Build the application
-RUN ./gradlew build -x test --no-daemon
-
-# -------- Runtime stage --------
+# Use a lightweight Java runtime
 FROM eclipse-temurin:17-jdk-jammy
 
+# Set working directory
 WORKDIR /app
 
-# Copy built jar from builder stage
-COPY --from=builder /app/build/libs/*.jar app.jar
+# Copy the built jar file
+COPY build/libs/*.jar demo-app.jar
 
+# Expose port (default Spring Boot port)
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Run the application
+ENTRYPOINT ["java", "-jar", "demo-app.jar"]
